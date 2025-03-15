@@ -32,7 +32,8 @@ const userController = {
     })
 
     //Send the response
-    res.json({
+    res.status(201).json({
+        message: "User Registered successfully!",
         name: newUser.name,
         email: newUser.email,
         id: newUser._id,
