@@ -40,6 +40,13 @@ const userController = {
   }),
 
   //Login
+  login: asyncHandler(async (req, res) => {
+    //TODO LOGIN FUNCTIONALITY @ASHISH - email and password
+
+    res.json({
+        message: "LOGIN IMPLEMENTATION.."
+    })
+  })
 };
 
 module.exports = userController;
