@@ -46,7 +46,7 @@ const userController = {
   }),
 
   //Login
-  login: asyncHandler(async (req, res) => {
+  login: asyncHandler(async (req, res, next) => {
     const { email, password } = req.body;
     if (!email || !password) {
       return next({
@@ -65,7 +65,7 @@ const userController = {
 
     const passwordIsValid = await bcrypt.compare(password, user.password);
     if (!passwordIsValid) {
-      return next({ statusCode: 401, message: "Invalid password." });
+      return next({ statusCode: 401, message: "Incorrect credentials." });
     }
 
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET_KEY, {
@@ -84,7 +84,7 @@ const userController = {
   }),
 
   //Get Profile
-  getProfile: asyncHandler(async (req, res) => {
+  getProfile: asyncHandler(async (req, res, next) => {
     const user = await User.findById(req.id).select("-password");
     if (!user) {
       return next({ statusCode: 404, message: "User not found." });
@@ -92,6 +92,48 @@ const userController = {
     res.status(200).json({
       message: "User profile fetched successfully!",
       user,
+    });
+  }),
+
+  //Update user details
+  updateUser: asyncHandler(async (req, res, next) => {
+    const { name, email, password, profilePic } = req.body;
+    const userId = req.id;
+
+    //Find the user
+    const user = await User.findById(userId);
+    if (!user) {
+      return next({ statusCode: 404, message: "User not Found." });
+    }
+
+    // Check if email already exists for another user
+    if (email && email !== user.email) {
+      const emailExists = await User.findOne({ email });
+      if (emailExists) {
+        return next({ statusCode: 409, message: "Email already in use." });
+      }
+    }
+
+    // Update fields if provided
+    if (name) user.name = name;
+    if (email) user.email = email;
+    if (profilePic) user.profilePic = profilePic;
+
+    // Hash password if provided
+    if (password) {
+      const salt = await bcrypt.genSalt(10);
+      user.password = await bcrypt.hash(password, salt);
+    }
+
+    await user.save();
+
+    res.status(200).json({
+      message: "User details updated successfully",
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+      },
     });
   }),
 };
