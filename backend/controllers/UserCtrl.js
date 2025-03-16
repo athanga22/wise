@@ -94,6 +94,38 @@ const userController = {
       user,
     });
   }),
+
+  //Update user details
+  updateUser: asyncHandler(async (req, res, next) => {
+    const { name, password, profilePic } = req.body;
+    const userId = req.id;
+
+    //Find the user
+    const user = await User.findById(userId);
+    if (!user) {
+      return next({ statusCode: 404, message: "User not Found." });
+    }
+
+    // Update fields if provided
+    if (name) user.name = name;
+    if (profilePic) user.profilePic = profilePic;
+
+    // Hash password if provided
+    if (password) {
+      const salt = await bcrypt.genSalt(10);
+      user.password = await bcrypt.hash(password, salt);
+    }
+
+    await user.save();
+
+    res.status(200).json({
+      message: "User details updated successfully",
+      user: {
+        id: user._id,
+        name: user.name,
+      },
+    });
+  }),
 };
 
 module.exports = userController;
