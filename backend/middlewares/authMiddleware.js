@@ -20,7 +20,7 @@ const isAuthenticated = (req, res, next) => {
     req.id = verifyToken.userId;
     next();
   } else {
-    const err = new Error("Token expired, login again");
+    const err = new Error("Token expired or incorrect. Login again.");
     err.statusCode = 401;
     next(err);
   }
