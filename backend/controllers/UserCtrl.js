@@ -46,7 +46,7 @@ const userController = {
   }),
 
   //Login
-  login: asyncHandler(async (req, res) => {
+  login: asyncHandler(async (req, res, next) => {
     const { email, password } = req.body;
     if (!email || !password) {
       return next({
@@ -65,7 +65,7 @@ const userController = {
 
     const passwordIsValid = await bcrypt.compare(password, user.password);
     if (!passwordIsValid) {
-      return next({ statusCode: 401, message: "Invalid password." });
+      return next({ statusCode: 401, message: "Incorrect credentials." });
     }
 
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET_KEY, {
@@ -84,7 +84,7 @@ const userController = {
   }),
 
   //Get Profile
-  getProfile: asyncHandler(async (req, res) => {
+  getProfile: asyncHandler(async (req, res, next) => {
     const user = await User.findById(req.id).select("-password");
     if (!user) {
       return next({ statusCode: 404, message: "User not found." });
@@ -106,6 +106,7 @@ const userController = {
       return next({ statusCode: 404, message: "User not Found." });
     }
 
+
     // Update fields if provided
     if (name) user.name = name;
     if (profilePic) user.profilePic = profilePic;
@@ -123,6 +124,7 @@ const userController = {
       user: {
         id: user._id,
         name: user.name,
+
       },
     });
   }),
