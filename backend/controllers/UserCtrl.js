@@ -97,7 +97,7 @@ const userController = {
 
   //Update user details
   updateUser: asyncHandler(async (req, res, next) => {
-    const { name, email, password, profilePic } = req.body;
+    const { name, password, profilePic } = req.body;
     const userId = req.id;
 
     //Find the user
@@ -106,17 +106,9 @@ const userController = {
       return next({ statusCode: 404, message: "User not Found." });
     }
 
-    // Check if email already exists for another user
-    if (email && email !== user.email) {
-      const emailExists = await User.findOne({ email });
-      if (emailExists) {
-        return next({ statusCode: 409, message: "Email already in use." });
-      }
-    }
 
     // Update fields if provided
     if (name) user.name = name;
-    if (email) user.email = email;
     if (profilePic) user.profilePic = profilePic;
 
     // Hash password if provided
@@ -132,7 +124,7 @@ const userController = {
       user: {
         id: user._id,
         name: user.name,
-        email: user.email,
+
       },
     });
   }),
