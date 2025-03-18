@@ -7,7 +7,7 @@ function App() {
     <div>
       <h1 className="text-white">Welcome to DASHBOARD!!</h1>
       <Login />
-      {/* <RegisterForm /> */}
+      <RegisterForm />
     </div>
   )
 }
