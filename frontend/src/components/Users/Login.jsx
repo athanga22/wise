@@ -31,7 +31,7 @@ const LoginForm = () => {
         setModal({ show: true, message: result.message || "Login failed" });
       }
     } catch (error) {
-      setModal({ show: true, message: "Error connecting to server" });
+      setModal({ show: true, message: error.message });
     }
   };
   

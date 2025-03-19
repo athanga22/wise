@@ -1,15 +1,19 @@
-import './App.css'
-import Login from './components/Users/Login'
-import RegisterForm from './components/Users/Register'
+import "./App.css";
+import PublicNavbar from "./components/Navbar/PublicNavbar";
+import Login from "./components/Users/Login";
+import RegisterForm from "./components/Users/Register";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 function App() {
   return (
-    <div>
-      <h1 className="text-white">Welcome to DASHBOARD!!</h1>
-      <Login />
-      <RegisterForm />
-    </div>
-  )
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<PublicNavbar />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<RegisterForm />} />
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
-export default App
+export default App;
