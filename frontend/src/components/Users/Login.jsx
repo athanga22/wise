@@ -1,5 +1,5 @@
-import React from "react";
-import { FaEnvelope, FaLock } from "react-icons/fa";
+import React, { useState } from "react";
+import { FaEnvelope, FaLock, FaEye, FaEyeSlash } from "react-icons/fa";
 import robotGif from "../../assets/robot.gif";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -16,6 +16,9 @@ const validationSchema = Yup.object({
 });
 
 const LoginForm = () => {
+  //Show or hide password
+  const [showPassword, setShowPassword] = useState(false);
+
   //Mutation
   const { mutateAsync, isPending, isError, error, isSuccess } = useMutation({
     mutationFn: loginAPI,
@@ -87,11 +90,20 @@ const LoginForm = () => {
         <FaLock className="absolute top-3 left-3 text-gray-400" />
         <input
           id="password"
-          type="password"
+          type={showPassword ? "text" : "password"}
           {...formik.getFieldProps("password")}
           placeholder="Password"
           className="pl-10 pr-4 py-2 w-full rounded-md border border-gray-300 focus:border-blue-500 focus:ring-blue-500"
         />
+        {/* Password visibility hidden or show */}
+        <button 
+          type="button" 
+          onClick={()=>{setShowPassword(!showPassword)}}
+          className="absolute top-3 right-3 text-gray-500 hover:text-gray-700"
+        >
+          {showPassword ? <FaEyeSlash /> : <FaEye />}
+        </button>
+
         {formik.touched.password && formik.errors.password && (
           <span className="text-xs text-red-500">{formik.errors.password}</span>
         )}
