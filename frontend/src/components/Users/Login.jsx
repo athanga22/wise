@@ -6,6 +6,7 @@ import * as Yup from "yup";
 import { useMutation } from "@tanstack/react-query";
 import { loginAPI } from "../../services/users/userServices";
 import AlertMessage from "../../Alert/AlertMessage";
+import { Link } from "react-router-dom";
 
 //Validations
 const validationSchema = Yup.object({
@@ -96,9 +97,11 @@ const LoginForm = () => {
           className="pl-10 pr-4 py-2 w-full rounded-md border border-gray-300 focus:border-blue-500 focus:ring-blue-500"
         />
         {/* Password visibility hidden or show */}
-        <button 
-          type="button" 
-          onClick={()=>{setShowPassword(!showPassword)}}
+        <button
+          type="button"
+          onClick={() => {
+            setShowPassword(!showPassword);
+          }}
           className="absolute top-3 right-3 text-gray-500 hover:text-gray-700"
         >
           {showPassword ? <FaEyeSlash /> : <FaEye />}
@@ -114,6 +117,22 @@ const LoginForm = () => {
       >
         Login
       </button>
+
+      <div className="flex justify-center">
+        <Link
+          to="/"
+          className="text-center hover:text-green-500 text-red-800 font-sm mr-1.5"
+        >
+          Home
+        </Link>
+        <p className="text-gray-600">/</p>
+        <Link
+          to="/register"
+          className="text-center hover:text-green-500 text-red-800 font-sm ml-1.5"
+        >
+          Register
+        </Link>
+      </div>
     </form>
   );
 };
